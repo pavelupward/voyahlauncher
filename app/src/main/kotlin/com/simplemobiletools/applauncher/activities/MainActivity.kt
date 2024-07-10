@@ -1,8 +1,13 @@
 package com.simplemobiletools.applauncher.activities
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.simplemobiletools.applauncher.BuildConfig
 import com.simplemobiletools.applauncher.LauncherAdapterUpdateListener
 import com.simplemobiletools.applauncher.R
@@ -15,6 +20,10 @@ import com.simplemobiletools.applauncher.extensions.dbHelper
 import com.simplemobiletools.applauncher.extensions.getAllLaunchers
 import com.simplemobiletools.applauncher.extensions.isAPredefinedApp
 import com.simplemobiletools.applauncher.models.AppLauncher
+import com.simplemobiletools.applauncher.voyah.PERMISSION_REQUEST_CODE
+import com.simplemobiletools.applauncher.voyah.SYSTEM_ALERT_WINDOW_REQUEST_CODE
+import com.simplemobiletools.applauncher.voyah.checkAndRequestPermissions
+import com.simplemobiletools.applauncher.voyah.checkSpecialPermissions
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
@@ -23,6 +32,7 @@ import com.simplemobiletools.commons.models.RadioItem
 import com.simplemobiletools.commons.models.Release
 import com.simplemobiletools.commons.views.MyGridLayoutManager
 import com.simplemobiletools.commons.views.MyRecyclerView
+
 
 class MainActivity : SimpleActivity(), LauncherAdapterUpdateListener {
     companion object {
@@ -56,6 +66,7 @@ class MainActivity : SimpleActivity(), LauncherAdapterUpdateListener {
         binding.fab.setOnClickListener {
             fabClicked()
         }
+        checkAndRequestPermissions(this)
     }
 
     override fun onResume() {
@@ -92,6 +103,32 @@ class MainActivity : SimpleActivity(), LauncherAdapterUpdateListener {
             binding.mainMenu.closeSearch()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            for (i in permissions.indices) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("PermissionResult", "Permission granted: ${permissions[i]}")
+                } else {
+                    Log.e("PermissionResult", "Permission denied: ${permissions[i]}")
+                }
+            }
+            checkSpecialPermissions(this)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == SYSTEM_ALERT_WINDOW_REQUEST_CODE) {
+            if (Settings.canDrawOverlays(this)) {
+                Log.d("OverlayPermission", "SYSTEM_ALERT_WINDOW permission granted")
+            } else {
+                Log.e("OverlayPermission", "SYSTEM_ALERT_WINDOW permission denied")
+            }
         }
     }
 

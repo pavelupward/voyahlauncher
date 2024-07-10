@@ -18,7 +18,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
@@ -73,18 +72,21 @@
         <activity
             android:name=".activities.SplashActivity"
             android:exported="false"
+            android:launchMode="singleTask"
             android:theme="@style/SplashTheme" />
 
         <activity
             android:name=".activities.MainActivity"
-            android:configChanges="orientation"
-            android:exported="false" />
+            android:configChanges="layoutDirection|smallestScreenSize|screenSize|screenLayout|orientation|locale"
+            android:exported="false"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".activities.SettingsActivity"
             android:configChanges="orientation"
             android:exported="false"
             android:label="@string/settings"
+            android:launchMode="singleTask"
             android:parentActivityName=".activities.MainActivity">
 
             <intent-filter>
@@ -98,6 +100,7 @@
             android:configChanges="orientation"
             android:exported="false"
             android:label="@string/about"
+            android:launchMode="singleTask"
             android:parentActivityName=".activities.MainActivity" />
 
         <activity
@@ -105,6 +108,7 @@
             android:configChanges="orientation"
             android:exported="false"
             android:label="@string/customize_colors"
+            android:launchMode="singleTask"
             android:parentActivityName=".activities.SettingsActivity" />
 
         <activity-alias
@@ -372,13 +376,12 @@
             </intent-filter>
         </activity-alias>
 
-
         <receiver
             android:name=".voyah.VoyahInitBootReceiver"
             android:enabled="true"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 

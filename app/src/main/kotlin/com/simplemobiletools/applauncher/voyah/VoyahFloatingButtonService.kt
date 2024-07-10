@@ -1,5 +1,7 @@
 package com.simplemobiletools.applauncher.voyah
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -9,8 +11,10 @@ import android.os.IBinder
 import android.util.TypedValue
 import android.view.*
 import android.widget.Button
+import androidx.core.app.NotificationCompat
 import com.simplemobiletools.applauncher.R
 import com.simplemobiletools.applauncher.activities.SplashActivity
+
 
 class VoyahFloatingButtonService : Service() {
 
@@ -25,15 +29,24 @@ class VoyahFloatingButtonService : Service() {
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        showNotification()
+        addFloatingButton()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
+        if (floatingButton == null) {
+            addFloatingButton()
+        }
+        showNotification()
+        return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
         windowManager?.removeView(floatingButton)
+        windowManager = null
+        floatingButton = null
+        layoutParams = null
     }
 
 
@@ -71,6 +84,32 @@ class VoyahFloatingButtonService : Service() {
             }
         }
 
+    }
+
+    private fun showNotification() {
+        val channelId = "${packageName}_voyah"
+        val channelName = "custom_voyah_app_launcher"
+        val notificationId = 1066661823
+
+        val notificationChannel = NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_LOW
+        )
+        notificationChannel.setSound(null, null)
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
+
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setTicker("Just for android")
+            .setContentText("Just for android text")
+            .setContentTitle("Just for android title")
+            .setSmallIcon(R.drawable.ic_flag_chinese_cn_vector)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .build()
+
+        startForeground(notificationId, notification)
     }
 
     private inner class FloatingButtonTouchListener : View.OnTouchListener {
