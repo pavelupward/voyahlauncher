@@ -7,6 +7,7 @@
         android:id="@+id/voyah_floating_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:text="Launcher app" />
 
 </FrameLayout>

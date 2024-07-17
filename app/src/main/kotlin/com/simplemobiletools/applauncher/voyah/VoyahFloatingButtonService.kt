@@ -8,15 +8,20 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.Button
 import androidx.core.app.NotificationCompat
 import com.simplemobiletools.applauncher.R
-import com.simplemobiletools.applauncher.activities.SplashActivity
+import com.simplemobiletools.applauncher.activities.MainActivity
 
 
 class VoyahFloatingButtonService : Service() {
+
+    companion object {
+        var isServiceRunning = false
+    }
 
     private var windowManager: WindowManager? = null
     private var floatingButton: View? = null
@@ -29,15 +34,20 @@ class VoyahFloatingButtonService : Service() {
     override fun onCreate() {
         super.onCreate()
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        showNotification()
-        addFloatingButton()
+        if (floatingButton == null) {
+            addFloatingButton()
+            showNotification()
+        }
+        Log.d("VoyahService", "Service onCreate called")
+        isServiceRunning = true
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (floatingButton == null) {
             addFloatingButton()
+            showNotification()
         }
-        showNotification()
+        Log.d("VoyahService", "Service onStartCommand called")
         return START_STICKY
     }
 
@@ -47,8 +57,9 @@ class VoyahFloatingButtonService : Service() {
         windowManager = null
         floatingButton = null
         layoutParams = null
+        isServiceRunning = false
+        Log.d("VoyahService", "Service destroyed")
     }
-
 
     private fun addFloatingButton() {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -78,8 +89,8 @@ class VoyahFloatingButtonService : Service() {
         button?.let {
             it.setOnTouchListener(FloatingButtonTouchListener())
             it.setOnClickListener {
-                val intent = Intent(this, SplashActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 startActivity(intent)
             }
         }
@@ -94,7 +105,7 @@ class VoyahFloatingButtonService : Service() {
         val notificationChannel = NotificationChannel(
             channelId,
             channelName,
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_HIGH
         )
         notificationChannel.setSound(null, null)
 
@@ -105,8 +116,8 @@ class VoyahFloatingButtonService : Service() {
             .setTicker("Just for android")
             .setContentText("Just for android text")
             .setContentTitle("Just for android title")
-            .setSmallIcon(R.drawable.ic_flag_chinese_cn_vector)
-            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setSmallIcon(android.R.drawable.ic_notification_overlay)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
 
         startForeground(notificationId, notification)
@@ -141,5 +152,4 @@ class VoyahFloatingButtonService : Service() {
             return false
         }
     }
-
 }

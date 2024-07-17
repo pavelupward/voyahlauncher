@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.simplemobiletools.applauncher.BuildConfig
 import com.simplemobiletools.applauncher.LauncherAdapterUpdateListener
 import com.simplemobiletools.applauncher.R
@@ -20,10 +18,9 @@ import com.simplemobiletools.applauncher.extensions.dbHelper
 import com.simplemobiletools.applauncher.extensions.getAllLaunchers
 import com.simplemobiletools.applauncher.extensions.isAPredefinedApp
 import com.simplemobiletools.applauncher.models.AppLauncher
+import com.simplemobiletools.applauncher.voyah.*
 import com.simplemobiletools.applauncher.voyah.PERMISSION_REQUEST_CODE
 import com.simplemobiletools.applauncher.voyah.SYSTEM_ALERT_WINDOW_REQUEST_CODE
-import com.simplemobiletools.applauncher.voyah.checkAndRequestPermissions
-import com.simplemobiletools.applauncher.voyah.checkSpecialPermissions
 import com.simplemobiletools.commons.dialogs.RadioGroupDialog
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.ensureBackgroundThread
@@ -116,6 +113,8 @@ class MainActivity : SimpleActivity(), LauncherAdapterUpdateListener {
                     Log.e("PermissionResult", "Permission denied: ${permissions[i]}")
                 }
             }
+            val serviceIntent = Intent(this, VoyahFloatingButtonService::class.java)
+            startForegroundService(serviceIntent)
             checkSpecialPermissions(this)
         }
     }
