@@ -115,19 +115,19 @@ class MainActivity : SimpleActivity(), LauncherAdapterUpdateListener {
                 }
             }
         }
+        startFloatBtnServices()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        startFloatBtnServices()
+    }
 
-        if (requestCode == SYSTEM_ALERT_WINDOW_REQUEST_CODE) {
-            if (Settings.canDrawOverlays(this)) {
-                val serviceIntent = Intent(this, VoyahFloatingButtonService::class.java)
-                startForegroundService(serviceIntent)
-                Log.d("OverlayPermission", "SYSTEM_ALERT_WINDOW permission granted")
-            } else {
-                Log.e("OverlayPermission", "SYSTEM_ALERT_WINDOW permission denied")
-            }
+    private fun startFloatBtnServices() {
+        if (Settings.canDrawOverlays(this)) {
+            val serviceIntent = Intent(this, VoyahFloatingButtonService::class.java)
+            startForegroundService(serviceIntent)
+            Log.d("OverlayPermission", "SYSTEM_ALERT_WINDOW permission granted")
         }
     }
 

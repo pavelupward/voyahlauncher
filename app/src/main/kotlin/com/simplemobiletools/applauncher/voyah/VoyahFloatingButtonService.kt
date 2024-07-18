@@ -79,7 +79,9 @@ class VoyahFloatingButtonService : Service() {
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             else
                 WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             PixelFormat.TRANSLUCENT
         )
         layoutParams?.let {
@@ -99,7 +101,6 @@ class VoyahFloatingButtonService : Service() {
                 startActivity(intent)
             }
         }
-
     }
 
     private fun showNotification() {
