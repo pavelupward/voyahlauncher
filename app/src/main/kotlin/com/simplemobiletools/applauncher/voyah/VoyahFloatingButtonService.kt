@@ -7,14 +7,18 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.Button
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.app.NotificationCompat
 import com.simplemobiletools.applauncher.R
 import com.simplemobiletools.applauncher.activities.MainActivity
+import kotlin.math.abs
 
 
 class VoyahFloatingButtonService : Service() {
@@ -75,7 +79,7 @@ class VoyahFloatingButtonService : Service() {
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             else
                 WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
         )
         layoutParams?.let {
@@ -85,12 +89,13 @@ class VoyahFloatingButtonService : Service() {
         }
         windowManager?.addView(floatingButton, layoutParams)
 
-        val button: Button? = floatingButton?.findViewById(R.id.voyah_floating_button)
+        val button: AppCompatButton? = floatingButton?.findViewById(R.id.voyah_floating_button)
         button?.let {
             it.setOnTouchListener(FloatingButtonTouchListener())
             it.setOnClickListener {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
                 startActivity(intent)
             }
         }
@@ -128,23 +133,54 @@ class VoyahFloatingButtonService : Service() {
         private var initialY = 0
         private var initialTouchX = 0f
         private var initialTouchY = 0f
+        private var isDragging = false
+        private val CLICK_DRAG_TOLERANCE = 10f
 
         override fun onTouch(view: View, event: MotionEvent): Boolean {
             val btnParams = layoutParams ?: return false
             when (event.action) {
-
                 MotionEvent.ACTION_DOWN -> {
                     initialX = btnParams.x
                     initialY = btnParams.y
                     initialTouchX = event.rawX
                     initialTouchY = event.rawY
+                    isDragging = false
                     return true
                 }
 
                 MotionEvent.ACTION_MOVE -> {
-                    btnParams.x = initialX + (event.rawX - initialTouchX).toInt()
-                    btnParams.y = initialY + (event.rawY - initialTouchY).toInt()
+                    val deltaX = (event.rawX - initialTouchX).toInt()
+                    val deltaY = (event.rawY - initialTouchY).toInt()
+
+                    val newX = initialX + deltaX
+                    val newY = initialY + deltaY
+
+                    val displayMetrics = resources.displayMetrics
+                    val screenWidth = displayMetrics.widthPixels
+                    val screenHeight = displayMetrics.heightPixels
+
+                    btnParams.x = Math.max(0, Math.min(newX, screenWidth - view.width))
+                    btnParams.y = Math.max(0, Math.min(newY, screenHeight - view.height))
+
                     windowManager?.updateViewLayout(floatingButton, btnParams)
+                    isDragging = true
+                    return true
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    val upRawX = event.rawX
+                    val upRawY = event.rawY
+                    val upDX = upRawX - initialTouchX
+                    val upDY = upRawY - initialTouchY
+
+                    if (abs(upDX) < CLICK_DRAG_TOLERANCE && abs(upDY) < CLICK_DRAG_TOLERANCE) {
+                        view.post {
+                            val intent = Intent(this@VoyahFloatingButtonService, MainActivity::class.java).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            }
+                            startActivity(intent)
+                        }
+                    }
                     return true
                 }
 

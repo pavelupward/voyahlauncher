@@ -108,14 +108,12 @@ class MainActivity : SimpleActivity(), LauncherAdapterUpdateListener {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             for (i in permissions.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    checkSpecialPermissions(this)
                     Log.d("PermissionResult", "Permission granted: ${permissions[i]}")
                 } else {
                     Log.e("PermissionResult", "Permission denied: ${permissions[i]}")
                 }
             }
-            val serviceIntent = Intent(this, VoyahFloatingButtonService::class.java)
-            startForegroundService(serviceIntent)
-            checkSpecialPermissions(this)
         }
     }
 
@@ -124,6 +122,8 @@ class MainActivity : SimpleActivity(), LauncherAdapterUpdateListener {
 
         if (requestCode == SYSTEM_ALERT_WINDOW_REQUEST_CODE) {
             if (Settings.canDrawOverlays(this)) {
+                val serviceIntent = Intent(this, VoyahFloatingButtonService::class.java)
+                startForegroundService(serviceIntent)
                 Log.d("OverlayPermission", "SYSTEM_ALERT_WINDOW permission granted")
             } else {
                 Log.e("OverlayPermission", "SYSTEM_ALERT_WINDOW permission denied")

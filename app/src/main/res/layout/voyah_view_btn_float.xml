@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@drawable/voyah_rounded_button_background">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/voyah_floating_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:text="Launcher app" />
-
+        android:text="Launcher App"
+        android:textColor="@android:color/white"
+        android:background="@drawable/voyah_rounded_button_background"
+        android:padding="10dp" />
 </FrameLayout>
