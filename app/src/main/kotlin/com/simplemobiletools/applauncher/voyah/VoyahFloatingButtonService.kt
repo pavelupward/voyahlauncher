@@ -15,6 +15,7 @@ import android.util.TypedValue
 import android.view.*
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.app.NotificationCompat
 import com.simplemobiletools.applauncher.R
 import com.simplemobiletools.applauncher.activities.MainActivity
@@ -91,7 +92,7 @@ class VoyahFloatingButtonService : Service() {
         }
         windowManager?.addView(floatingButton, layoutParams)
 
-        val button: AppCompatButton? = floatingButton?.findViewById(R.id.voyah_floating_button)
+        val button: AppCompatImageButton? = floatingButton?.findViewById(R.id.voyah_floating_button)
         button?.let {
             it.setOnTouchListener(FloatingButtonTouchListener())
             it.setOnClickListener {
@@ -120,10 +121,13 @@ class VoyahFloatingButtonService : Service() {
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setTicker("Just for android")
+            .setCategory(null)
+            .setLocalOnly(false)
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
             .setContentText("Just for android text")
             .setContentTitle("Just for android title")
             .setSmallIcon(android.R.drawable.ic_notification_overlay)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
 
         startForeground(notificationId, notification)
