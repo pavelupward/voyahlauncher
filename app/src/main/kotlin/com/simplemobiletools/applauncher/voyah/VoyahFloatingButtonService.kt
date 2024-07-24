@@ -86,7 +86,7 @@ class VoyahFloatingButtonService : Service() {
             PixelFormat.TRANSLUCENT
         )
         layoutParams?.let {
-            it.gravity = Gravity.BOTTOM or Gravity.END
+            it.gravity = Gravity.CENTER_HORIZONTAL or Gravity.CENTER_VERTICAL
             it.x = marginInPx
             it.y = marginInPx
         }

@@ -1,134 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/settings_coordinator"
+    android:paddingLeft="145dp"
+    android:paddingTop="45dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
+        android:background="@color/color_primary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/color_primary"
         app:title="@string/settings"
-        app:titleTextAppearance="@style/AppTheme.ActionBar.TitleTextStyle" />
-
+        app:titleTextAppearance="@style/AppTheme.ActionBar.TitleTextStyle"/>
     <androidx.core.widget.NestedScrollView
         android:id="@+id/settings_nested_scrollview"
+        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:fillViewport="true"
-        android:scrollbars="none">
-
+        android:fillViewport="true">
         <LinearLayout
+            android:orientation="vertical"
             android:id="@+id/settings_holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/settings_color_customization_section_label"
-                style="@style/SettingsSectionLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/color_customization" />
-
+                android:text="@string/color_customization"
+                style="@style/SettingsSectionLabelStyle"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/settings_color_customization_holder"
-                style="@style/SettingsHolderTextViewOneLinerStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                style="@style/SettingsHolderTextViewOneLinerStyle">
                 <com.simplemobiletools.commons.views.MyTextView
                     android:id="@+id/settings_color_customization_label"
-                    style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/customize_colors"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/SettingsTextLabelStyle"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
-
             <include
                 android:id="@+id/settings_color_customization_divider"
-                layout="@layout/divider" />
-
+                layout="@layout/divider"/>
             <TextView
                 android:id="@+id/settings_general_settings_label"
-                style="@style/SettingsSectionLabelStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/general_settings" />
-
+                android:text="@string/general_settings"
+                style="@style/SettingsSectionLabelStyle"/>
             <RelativeLayout
                 android:id="@+id/settings_purchase_thank_you_holder"
-                style="@style/SettingsHolderTextViewOneLinerStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                style="@style/SettingsHolderTextViewOneLinerStyle">
                 <com.simplemobiletools.commons.views.MyTextView
                     android:id="@+id/settings_purchase_thank_you"
-                    style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/purchase_simple_thank_you" />
-
+                    android:text="@string/purchase_simple_thank_you"
+                    style="@style/SettingsTextLabelStyle"/>
             </RelativeLayout>
-
             <RelativeLayout
                 android:id="@+id/settings_use_english_holder"
-                style="@style/SettingsHolderCheckboxStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                style="@style/SettingsHolderCheckboxStyle">
                 <com.simplemobiletools.commons.views.MyAppCompatCheckbox
                     android:id="@+id/settings_use_english"
-                    style="@style/SettingsCheckboxStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/use_english_language" />
-
+                    android:text="@string/use_english_language"
+                    style="@style/SettingsCheckboxStyle"/>
             </RelativeLayout>
-
             <RelativeLayout
                 android:id="@+id/settings_language_holder"
-                style="@style/SettingsHolderTextViewStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                style="@style/SettingsHolderTextViewStyle">
                 <com.simplemobiletools.commons.views.MyTextView
                     android:id="@+id/settings_language_label"
-                    style="@style/SettingsTextLabelStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/language" />
-
+                    android:text="@string/language"
+                    style="@style/SettingsTextLabelStyle"/>
                 <com.simplemobiletools.commons.views.MyTextView
                     android:id="@+id/settings_language"
-                    style="@style/SettingsTextValueStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/settings_language_label"
-                    tools:text="English" />
-
+                    style="@style/SettingsTextValueStyle"/>
             </RelativeLayout>
-
             <RelativeLayout
                 android:id="@+id/settings_close_app_holder"
-                style="@style/SettingsHolderCheckboxStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                style="@style/SettingsHolderCheckboxStyle">
                 <com.simplemobiletools.commons.views.MyAppCompatCheckbox
                     android:id="@+id/settings_close_app"
-                    style="@style/SettingsCheckboxStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/close_app" />
-
+                    android:text="@string/close_app"
+                    style="@style/SettingsCheckboxStyle"/>
             </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

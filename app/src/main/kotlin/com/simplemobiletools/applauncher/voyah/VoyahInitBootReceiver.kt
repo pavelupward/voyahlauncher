@@ -3,17 +3,19 @@ package com.simplemobiletools.applauncher.voyah
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.simplemobiletools.applauncher.activities.MainActivity
+import android.provider.Settings
+import android.util.Log
 
 class VoyahInitBootReceiver : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
-        if (p1?.action == Intent.ACTION_BOOT_COMPLETED) {
+        if (p1?.action == null || p1.action == Intent.ACTION_BOOT_COMPLETED) {
             p0?.let {
-                val intent = Intent(p0, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                if (Settings.canDrawOverlays(p0)) {
+                    val serviceIntent = Intent(p0, VoyahFloatingButtonService::class.java)
+                    p0.startForegroundService(serviceIntent)
+                    Log.d("OverlayPermission", "SYSTEM_ALERT_WINDOW permission granted")
                 }
-                p0.startActivity(intent)
             }
         }
     }
